@@ -1,48 +1,10 @@
 import processing.serial.*;
 
 Serial port;
-
 color lineColor;
 float x, y;
 int t;
-
-float ymax = 200;
-
 MPoint[] points;
-PGraphics g;
-
-
-void setup() {
-  size(600, 800);
-  noStroke();
-  frameRate(180);
-  smooth();
-  lineColor = color(128);
-  x = -10; 
-  y = 400;
-  t = 0;
-  g = createGraphics(width, height);
-
-
-  points = new MPoint[int(width / 10)];
-  //points[0] = new MPoint(x, y);
-  addPoint(0);
-  port = new Serial(this, "COM3", 9600);
-  port.bufferUntil('\r');
-  background(255);
-  //thread("readSerial");
-}
-
-void serialEvent(Serial p) {
-  String inStr = p.readStringUntil('\r');
-  if (inStr != null) {
-    noFill();
-    noStroke();
-    //rect(0, 450, 100, 100);
-    inStr = inStr.substring(1).trim();
-    addPoint(float(inStr));
-  }
-}
 
 class MPoint {
   float x, y;
@@ -60,6 +22,34 @@ class MPoint {
   } 
   
 }
+
+
+void setup() {
+  size(600, 800);
+  noStroke();
+  frameRate(180);
+  smooth();
+  lineColor = color(128);
+  x = -10; 
+  y = 400;
+  t = 0;
+  g = createGraphics(width, height);
+
+  points = new MPoint[int(width / 10)];
+  addPoint(0);
+  port = new Serial(this, "COM3", 9600);
+  port.bufferUntil('\r');
+  background(255);
+}
+
+void serialEvent(Serial p) {
+  String inStr = p.readStringUntil('\r');
+  if (inStr != null) {
+    inStr = inStr.substring(1).trim();
+    addPoint(float(inStr));
+  }
+}
+
 
 void draw() {
   stroke(lineColor);
@@ -101,9 +91,4 @@ void drawGraph(int t) {
     float currY = y - points[i].y;
     line(points[i-1].x, prevY, points[i].x, currY);
   }
-}
-
-
-boolean overRect(int x, int y, int width, int height) {
-  return ((mouseX >= x) && (mouseX <= x + width) && (mouseY >= y) && (mouseY <= y + height));
 }
