@@ -33,7 +33,6 @@ void setup() {
   x = -10; 
   y = 400;
   t = 0;
-  g = createGraphics(width, height);
 
   points = new MPoint[int(width / 10)];
   addPoint(0);
@@ -58,7 +57,6 @@ void draw() {
 
 void addPoint(float val) {
   x += 10;
-  
   points[t] = new MPoint(x, val);
   if (t > 1) {
     if (t == points.length - 1) {
@@ -71,7 +69,6 @@ void addPoint(float val) {
     text(val, 0, 550);
     drawGraph(t);
   }
-
   t += t < points.length - 1 ? 1 : 0;
 }
 
